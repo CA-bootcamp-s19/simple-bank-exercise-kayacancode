@@ -17,7 +17,7 @@ contract SimpleBank {
     /* Fill in the keyword. We want to create a getter function and allow contracts to be able to see if a user is enrolled.  */
     mapping (address => bool) enrolled;
     function getCheckUserEnrollement() public view returns(enrolled){
-        return owner[enrolled]
+        return owner[enrolled];
     }
 
     /* Let's make sure everyone knows who owns the bank. Use the appropriate keyword for this*/
@@ -35,7 +35,7 @@ contract SimpleBank {
 
     /* Create an event called LogWithdrawal */
     /* Add 3 arguments for this event, an accountAddress, withdrawAmount and a newBalance */
-    event LogWithdrawal(address indexed accountAddress, uint withdrawAmount, uint newBalance)
+    event LogWithdrawal(address indexed accountAddress, uint withdrawAmount, uint newBalance);
 
     //
     // Functions
@@ -63,7 +63,7 @@ contract SimpleBank {
     // allows function to run locally/off blockchain
     function getBalance() public returns (uint) {
         /* Get the balance of the sender of this transaction */
-        return balances[msg.sender]
+        return balances[msg.sender];
     }
 
     /// @notice Enroll a customer with the bank
@@ -71,7 +71,7 @@ contract SimpleBank {
     // Emit the appropriate event
     function enroll() public returns (bool){
         return getCheckUserEnrollement;
-        emit LogEnrolled(msg.sender)
+        emit LogEnrolled(msg.sender);
     }
 
     /// @notice Deposit ether into bank
@@ -83,7 +83,7 @@ contract SimpleBank {
     function deposit() public returns payable (uint) {
         balances[msg.sender] += msg.value;
         return balances[msg.sender];
-        emit LogDepositMade(msg.sender, msg.value)
+        emit LogDepositMade(msg.sender, msg.value);
         /* Add the amount to the user's balance, call the event associated with a deposit,
           then return the balance of the user */
     }
@@ -103,7 +103,7 @@ contract SimpleBank {
                msg.sender.transfer(withdrawAmount);
            }
            return balances[msg.sender];
-           emit LogWithdrawal(msg.sender, msg.value)
+           emit LogWithdrawal(msg.sender, msg.value);
     }
 
 }
