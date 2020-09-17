@@ -7,18 +7,14 @@
 pragma solidity ^0.5.0;
 
 contract SimpleBank {
-
-    uint8 private clientCount;
-    mapping (address => uint) private  balances;
-    address public owner;
-    /* Fill in the keyword. Hint: We want to protect our users balance from other contracts*/
     
+    
+    /* Fill in the keyword. Hint: We want to protect our users balance from other contracts*/
+    mapping (address => uint) private  balances;
     
     /* Fill in the keyword. We want to create a getter function and allow contracts to be able to see if a user is enrolled.  */
-    mapping (address => bool) enrolled;
-    function getCheckUserEnrollement() public view returns(enrolled){
-        return owner[enrolled];
-    }
+    mapping (address => bool) public enrolled;
+    
 
     /* Let's make sure everyone knows who owns the bank. Use the appropriate keyword for this*/
     address public owner;
@@ -28,14 +24,14 @@ contract SimpleBank {
     //
     
     /* Add an argument for this event, an accountAddress */
-    event LogEnrolled(address indexed accountAddress);
+    event LogEnrolled(address  accountAddress);
 
     /* Add 2 arguments for this event, an accountAddress and an amount */
-    event LogDepositMade(address indexed accountAddress, uint amount);
+    event LogDepositMade(address  accountAddress, uint amount);
 
     /* Create an event called LogWithdrawal */
     /* Add 3 arguments for this event, an accountAddress, withdrawAmount and a newBalance */
-    event LogWithdrawal(address indexed accountAddress, uint withdrawAmount, uint newBalance);
+    event LogWithdrawal(address  accountAddress, uint withdrawAmount, uint newBalance);
 
     //
     // Functions
@@ -61,7 +57,7 @@ contract SimpleBank {
     /// @return The balance of the user
     // A SPECIAL KEYWORD prevents function from editing state variables;
     // allows function to run locally/off blockchain
-    function getBalance() public returns (uint) {
+    function getBalance() public view returns (uint) {
         /* Get the balance of the sender of this transaction */
         return balances[msg.sender];
     }
@@ -70,8 +66,9 @@ contract SimpleBank {
     /// @return The users enrolled status
     // Emit the appropriate event
     function enroll() public returns (bool){
-        return getCheckUserEnrollement;
+        enrolled[msg.sender] = true;
         emit LogEnrolled(msg.sender);
+        return enrolled[msg.sender];
     }
 
     /// @notice Deposit ether into bank
@@ -80,10 +77,11 @@ contract SimpleBank {
     // Use the appropriate global variables to get the transaction sender and value
     // Emit the appropriate event    
     // Users should be enrolled before they can make deposits
-    function deposit() public returns payable (uint) {
+    function deposit() public payable returns  (uint){
         balances[msg.sender] += msg.value;
+        emit LogDepositMade(msg.sender, balances[msg.sender]);
         return balances[msg.sender];
-        emit LogDepositMade(msg.sender, msg.value);
+       
         /* Add the amount to the user's balance, call the event associated with a deposit,
           then return the balance of the user */
     }
@@ -102,8 +100,9 @@ contract SimpleBank {
                balances[msg.sender] -= withdrawAmount;
                msg.sender.transfer(withdrawAmount);
            }
+           
+           emit LogWithdrawal(msg.sender, withdrawAmount, balances[msg.sender]);
            return balances[msg.sender];
-           emit LogWithdrawal(msg.sender, msg.value);
     }
 
 }
