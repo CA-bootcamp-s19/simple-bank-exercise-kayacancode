@@ -100,7 +100,7 @@ contract SimpleBank {
                balances[msg.sender] -= withdrawAmount;
                msg.sender.transfer(withdrawAmount);
            }
-           assert(withdrawAmount >= balances[msg.sender])
+           assert(withdrawAmount >= balances[msg.sender]);
            emit LogWithdrawal(msg.sender, withdrawAmount, balances[msg.sender]);
            return balances[msg.sender];
     }
